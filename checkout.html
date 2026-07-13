@@ -7,6 +7,7 @@
 <meta name="description" content="Submit your vessel details and get your history report — boats, yachts, jet skis, and commercial vessels.">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="styles.css">
+<script async defer src="https://js.whop.com/static/checkout/loader.js"></script>
 </head>
 <body>
 
@@ -40,12 +41,12 @@
   <div class="wrap">
     <span class="eyebrow">Step 2 of 2</span>
     <h1 style="font-size:32px; color:var(--paper); margin-top:12px;">Tell us about the vessel, then check out securely.</h1>
-    <p style="color:var(--fog); margin-top:12px; max-width:60ch;">Fill in the identifier below so we know exactly what to search. You'll then be sent to a secure Whop checkout to complete payment — your report is emailed once the search is done.</p>
+    <p style="color:var(--fog); margin-top:12px; max-width:60ch;">Pick your vessel type and plan, then complete payment right here — you won't be sent to another site. You'll enter your HIN/registration number and email as part of checkout.</p>
 
-    <div class="order-steps" style="margin-top:28px;">
+    <div class="order-steps" style="margin-top:28px;" id="orderSteps">
       <span>1. Choose a plan</span>
-      <span class="active">2. Vessel details</span>
-      <span>3. Secure checkout</span>
+      <span class="active" id="stepDetails">2. Vessel details</span>
+      <span id="stepPayment">3. Payment</span>
       <span>4. Report by email</span>
     </div>
   </div>
@@ -67,28 +68,16 @@
           </select>
         </div>
         <div class="field">
-          <label for="hin">HIN, hull number, or registration number</label>
-          <input type="text" id="hin" name="hin" placeholder="e.g. ABC12345D404" required>
-        </div>
-        <div class="field">
-          <label for="listing">Listing link (optional)</label>
-          <input type="url" id="listing" name="listing" placeholder="https://…">
-        </div>
-        <div class="field">
           <label for="plan">Report plan</label>
           <select id="plan" name="plan" required>
             <option value="">Select a plan…</option>
-            <option value="basic" data-price="54.99">Basic — $54.99</option>
-            <option value="standard" data-price="74.99" selected>Standard — $74.99 (Most Popular)</option>
-            <option value="premium" data-price="94.99">Premium — $94.99</option>
+            <option value="basic" data-price="54.99">Basic — £54.99</option>
+            <option value="standard" data-price="74.99" selected>Standard — £74.99 (Most Popular)</option>
+            <option value="premium" data-price="94.99">Premium — £94.99</option>
           </select>
         </div>
-        <div class="field">
-          <label for="email">Email — your report is sent here</label>
-          <input type="email" id="email" name="email" placeholder="you@email.com" required>
-        </div>
-        <button type="submit" class="btn btn-brass" style="width:100%; justify-content:center;">Continue to Secure Checkout</button>
-        <p style="margin-top:14px; font-size:12.5px; color:var(--fog-dim); text-align:center;">Payment is processed by Whop. We never see or store your card details.</p>
+        <button type="submit" class="btn btn-brass" id="submitBtn" style="width:100%; justify-content:center;">Continue to Payment</button>
+        <p style="margin-top:14px; font-size:12.5px; color:var(--fog-dim); text-align:center;">Payment is handled by Whop's embedded checkout, right on this page. You'll enter your HIN/registration and email as part of that step.</p>
       </form>
 
       <div class="order-summary">
@@ -96,9 +85,33 @@
         <div class="sum-row"><span>Plan</span><span id="sumPlan">Standard</span></div>
         <div class="sum-row"><span>Vessel type</span><span id="sumType">—</span></div>
         <div class="sum-row"><span>Delivery</span><span>4–8 hrs, by email</span></div>
-        <div class="sum-row total"><span>Total</span><span id="sumTotal">$74.99</span></div>
+        <div class="sum-row total"><span>Total</span><span id="sumTotal">£74.99</span></div>
       </div>
 
+    </div>
+
+    <!-- Embedded Whop checkout — hidden until the vessel-details form above is submitted.
+         Replace the three plan_XXXXXXXXX placeholders with your real Whop Plan IDs
+         (Dashboard > Checkout links > ⋮ on a pricing option > Details > copy the plan_ id). -->
+    <div id="paymentStep" style="display:none; margin-top:40px;">
+      <span class="eyebrow">Step 3 of 4 — Payment</span>
+      <h2 style="font-size:24px; color:var(--paper); margin-top:10px;">Complete your payment</h2>
+
+      <div id="embed-basic" class="whop-embed-wrap" hidden>
+        <div data-whop-checkout-plan-id="plan_tBIybbykuKBZQ" data-whop-checkout-theme="dark" data-whop-checkout-return-url="https://boathistoryverify.com/checkout.html?status=complete&plan=basic"></div>
+      </div>
+      <div id="embed-standard" class="whop-embed-wrap" hidden>
+        <div data-whop-checkout-plan-id="plan_mNomg0cvbpWPe" data-whop-checkout-theme="dark" data-whop-checkout-return-url="https://boathistoryverify.com/checkout.html?status=complete&plan=standard"></div>
+      </div>
+      <div id="embed-premium" class="whop-embed-wrap" hidden>
+        <div data-whop-checkout-plan-id="plan_sTL05rahDCk6t" data-whop-checkout-theme="dark" data-whop-checkout-return-url="https://boathistoryverify.com/checkout.html?status=complete&plan=premium"></div>
+      </div>
+    </div>
+
+    <div id="successStep" style="display:none; margin-top:40px; text-align:center; padding:48px 24px; background:var(--ink-2); border:1px solid var(--line); border-radius:3px;">
+      <span class="eyebrow">Payment received</span>
+      <h2 style="font-size:24px; color:var(--paper); margin-top:10px;">You're all set.</h2>
+      <p style="color:var(--fog); margin-top:10px;">Your report will arrive by email within 4–8 hours. Keep an eye on your inbox (and spam folder, just in case).</p>
     </div>
   </div>
 </section>
@@ -114,15 +127,6 @@
 
 <script src="script.js"></script>
 <script>
-  // Maps each plan to its Whop checkout link.
-  // Replace these three URLs with the real checkout links from your Whop dashboard
-  // (Dashboard > Checkout links > Copy checkout link) once your products are set up.
-  const WHOP_CHECKOUT_LINKS = {
-    basic:    "https://whop.com/checkout/YOUR_BASIC_PLAN_ID/",
-    standard: "https://whop.com/checkout/YOUR_STANDARD_PLAN_ID/",
-    premium:  "https://whop.com/checkout/YOUR_PREMIUM_PLAN_ID/"
-  };
-
   const planSelect = document.getElementById('plan');
   const typeSelect = document.getElementById('vesselType');
   const sumPlan = document.getElementById('sumPlan');
@@ -133,7 +137,7 @@
     const opt = planSelect.options[planSelect.selectedIndex];
     if (opt && opt.value) {
       sumPlan.textContent = opt.textContent.split('—')[0].trim();
-      sumTotal.textContent = '$' + opt.dataset.price;
+      sumTotal.textContent = '£' + opt.dataset.price;
     }
     const typeOpt = typeSelect.options[typeSelect.selectedIndex];
     sumType.textContent = (typeOpt && typeOpt.value) ? typeOpt.textContent : '—';
@@ -145,22 +149,39 @@
   document.getElementById('orderForm').addEventListener('submit', function(e){
     e.preventDefault();
     const plan = planSelect.value;
-    const hin = document.getElementById('hin').value.trim();
-    const email = document.getElementById('email').value.trim();
     const vesselType = typeSelect.value;
-    const listing = document.getElementById('listing').value.trim();
 
-    if (!plan || !hin || !email || !vesselType) return;
+    if (!plan || !vesselType) return;
 
-    const checkoutUrl = WHOP_CHECKOUT_LINKS[plan];
-    // Pass the vessel details along as query params so they show up in Whop's
-    // "questions before checkout" answers or in your post-payment fulfillment step.
-    const params = new URLSearchParams({ hin, email, vesselType, listing });
-    window.location.href = checkoutUrl + '?' + params.toString();
+    // Vessel type and plan choice only exist in this browser tab's memory — that's
+    // fine, since HIN/registration and email are now collected directly inside the
+    // Whop embed below via its "Ask questions before checkout" fields, and stored
+    // against the payment in your Whop dashboard.
+
+    // Hide the details form, show the matching embedded checkout.
+    document.getElementById('orderForm').closest('.order-shell').style.display = 'none';
+    document.getElementById('paymentStep').style.display = 'block';
+    document.getElementById('stepDetails').classList.remove('active');
+    document.getElementById('stepPayment').classList.add('active');
+
+    ['basic','standard','premium'].forEach(function(p){
+      document.getElementById('embed-' + p).hidden = (p !== plan);
+    });
+
+    window.scrollTo({ top: document.getElementById('paymentStep').offsetTop - 100, behavior: 'smooth' });
   });
 
-  // Pre-fill plan and vessel type from query params (arriving from a pricing card or a vessel plate's "Order" button)
+  // Show a thank-you state if returning from Whop with ?status=complete
   const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('status') === 'complete') {
+    document.querySelector('.order-shell').style.display = 'none';
+    document.getElementById('paymentStep').style.display = 'none';
+    document.getElementById('successStep').style.display = 'block';
+    document.getElementById('stepDetails').classList.remove('active');
+    document.getElementById('stepPayment').classList.remove('active');
+  }
+
+  // Pre-fill plan and vessel type from query params (arriving from a pricing card or a vessel plate's "Order" button)
   if (urlParams.get('plan')) {
     planSelect.value = urlParams.get('plan');
   }
