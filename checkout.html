@@ -71,9 +71,9 @@
           <label for="plan">Report plan</label>
           <select id="plan" name="plan" required>
             <option value="">Select a plan…</option>
-            <option value="basic" data-price="54.99">Basic — £54.99</option>
-            <option value="standard" data-price="74.99" selected>Standard — £74.99 (Most Popular)</option>
-            <option value="premium" data-price="94.99">Premium — £94.99</option>
+            <option value="basic" data-price="74.99">Basic — $74.99 CAD</option>
+            <option value="standard" data-price="99.99" selected>Standard — $99.99 CAD (Most Popular)</option>
+            <option value="premium" data-price="124.99">Premium — $124.99 CAD</option>
           </select>
         </div>
         <button type="submit" class="btn btn-brass" id="submitBtn" style="width:100%; justify-content:center;">Continue to Payment</button>
@@ -85,7 +85,7 @@
         <div class="sum-row"><span>Plan</span><span id="sumPlan">Standard</span></div>
         <div class="sum-row"><span>Vessel type</span><span id="sumType">—</span></div>
         <div class="sum-row"><span>Delivery</span><span>4–8 hrs, by email</span></div>
-        <div class="sum-row total"><span>Total</span><span id="sumTotal">£74.99</span></div>
+        <div class="sum-row total"><span>Total</span><span id="sumTotal">$99.99 CAD</span></div>
       </div>
 
     </div>
@@ -137,7 +137,7 @@
     const opt = planSelect.options[planSelect.selectedIndex];
     if (opt && opt.value) {
       sumPlan.textContent = opt.textContent.split('—')[0].trim();
-      sumTotal.textContent = '£' + opt.dataset.price;
+      sumTotal.textContent = '$' + opt.dataset.price + ' CAD';
     }
     const typeOpt = typeSelect.options[typeSelect.selectedIndex];
     sumType.textContent = (typeOpt && typeOpt.value) ? typeOpt.textContent : '—';
