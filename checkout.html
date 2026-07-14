@@ -98,20 +98,14 @@
       <h2 style="font-size:24px; color:var(--paper); margin-top:10px;">Complete your payment</h2>
 
       <div id="embed-basic" class="whop-embed-wrap" hidden>
-        <div data-whop-checkout-plan-id="plan_6bbmvtcwXPZgW" data-whop-checkout-theme="dark" data-whop-checkout-return-url="https://boathistoryverify.com/checkout.html?status=complete&plan=basic"></div>
+        <div data-whop-checkout-plan-id="plan_6bbmvtcwXPZgW" data-whop-checkout-theme="dark"></div>
       </div>
       <div id="embed-standard" class="whop-embed-wrap" hidden>
-        <div data-whop-checkout-plan-id="plan_J6pI3p8AfH46O" data-whop-checkout-theme="dark" data-whop-checkout-return-url="https://boathistoryverify.com/checkout.html?status=complete&plan=standard"></div>
+        <div data-whop-checkout-plan-id="plan_J6pI3p8AfH46O" data-whop-checkout-theme="dark"></div>
       </div>
       <div id="embed-premium" class="whop-embed-wrap" hidden>
-        <div data-whop-checkout-plan-id="plan_ExeNKi01FTN6r" data-whop-checkout-theme="dark" data-whop-checkout-return-url="https://boathistoryverify.com/checkout.html?status=complete&plan=premium"></div>
+        <div data-whop-checkout-plan-id="plan_ExeNKi01FTN6r" data-whop-checkout-theme="dark"></div>
       </div>
-    </div>
-
-    <div id="successStep" style="display:none; margin-top:40px; text-align:center; padding:48px 24px; background:var(--ink-2); border:1px solid var(--line); border-radius:3px;">
-      <span class="eyebrow">Payment received</span>
-      <h2 style="font-size:24px; color:var(--paper); margin-top:10px;">You're all set.</h2>
-      <p style="color:var(--fog); margin-top:10px;">Your report will arrive by email within 4–8 hours. Keep an eye on your inbox (and spam folder, just in case).</p>
     </div>
   </div>
 </section>
@@ -171,17 +165,8 @@
     window.scrollTo({ top: document.getElementById('paymentStep').offsetTop - 100, behavior: 'smooth' });
   });
 
-  // Show a thank-you state if returning from Whop with ?status=complete
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('status') === 'complete') {
-    document.querySelector('.order-shell').style.display = 'none';
-    document.getElementById('paymentStep').style.display = 'none';
-    document.getElementById('successStep').style.display = 'block';
-    document.getElementById('stepDetails').classList.remove('active');
-    document.getElementById('stepPayment').classList.remove('active');
-  }
-
   // Pre-fill plan and vessel type from query params (arriving from a pricing card or a vessel plate's "Order" button)
+  const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('plan')) {
     planSelect.value = urlParams.get('plan');
   }
